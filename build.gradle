@@ -1,0 +1,70 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.0'
+        classpath 'com.google.cloud.tools:endpoints-framework-gradle-plugin:1.0.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task runIntegrationTest {
+    group = "integration test"
+    description = "running integration tests"
+    dependsOn = ["startServer", "stopServer", "runUITest"]
+    doLast {
+        println "running integration tests"
+    }
+}
+
+task startServer {
+    group = "integration test"
+    description = "starting server"
+    dependsOn ':backend:appengineStart'
+    doLast {
+        println "server started"
+    }
+
+}
+
+task stopServer {
+    group = "integration test"
+    description = "stoping server"
+    dependsOn ':backend:appengineStop'
+    mustRunAfter "runUITest"
+    doLast {
+        println "server stopped"
+    }
+}
+
+task runUITest {
+    group = "integration test"
+    description = "MainActivity's button is clicked, fetching a joke from the server and starting a new activity to display that joke"
+    mustRunAfter "startServer"
+    dependsOn ':app:connectedAndroidTest'
+    finalizedBy "stopServer"
+
+    doLast {
+        println "MainActivity's button is clicked, fetching a joke from the server and starting a new activity to display that joke"
+    }
+}

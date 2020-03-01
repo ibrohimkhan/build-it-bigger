@@ -1,0 +1,5 @@
+rootProject.name='build-it-bigger'
+include ':app'
+include ':joke'
+include ':jokerui'
+include ':backend'
